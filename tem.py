@@ -5,7 +5,7 @@ from pystem.stemsegmentation import segmentationSTEM
 
 class pySTEMTEMMETAJob(TemplateJob):
     def __init__(self, project, job_name):
-        super(TEMMETAJob, self).__init__(project, job_name) 
+        super(pySTEMTEMMETAJob, self).__init__(project, job_name) 
         self.input['file_name'] = ''
         self.input['vector'] = []
         #self.input['patch_x'] = 20
@@ -53,8 +53,6 @@ class pySTEMTEMMETAJob(TemplateJob):
                        window_x=20,window_y=20,
                        patch_x=20,patch_y=20,
                        step=5,
-                       descriptor_name=descriptor_name,
-                       #method='direct',
                        upsampling=True)
         labels = seg.perform_clustering(image)
         return labels
@@ -64,9 +62,10 @@ class pySTEMTEMMETAJob(TemplateJob):
             [[x1, y1], [x2, y2]] = self._vec
             av = self._image.average()
             self._profile = av.intensity_profile(x1, y1, x2, y2)
-            self._segmentation_labels = self.perform_segmentation() 
+            self._segmentation_labels = self.perform_segmentation(av.data) 
             with self.project_hdf5.open("output/generic") as h5out: 
                  h5out["profile"] = self._profile.data
+                 h5out["segmentation_labels"] = self._segmentation_labels
         self.status.finished = True
             
     def plot_profile(self):
