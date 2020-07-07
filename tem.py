@@ -1,6 +1,7 @@
 from pyiron.base.job.template import TemplateJob
 from temmeta import data_io as dio
 from temmeta import image_filters as imf
+from pystem.stemsegmentation import segmentationSTEM
 
 class pySTEMTEMMETAJob(TemplateJob):
     def __init__(self, project, job_name):
