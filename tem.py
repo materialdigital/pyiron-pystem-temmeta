@@ -1,13 +1,18 @@
 from pyiron.base.job.template import TemplateJob
 from temmeta import data_io as dio
 from temmeta import image_filters as imf
+from pystem.stemsegmentation import segmentationSTEM
 
-
-class TEMMETAJob(TemplateJob):
+class pySTEMTEMMETAJob(TemplateJob):
     def __init__(self, project, job_name):
-        super(TEMMETAJob, self).__init__(project, job_name) 
+        super(pySTEMTEMMETAJob, self).__init__(project, job_name) 
         self.input['file_name'] = ''
         self.input['vector'] = []
+        #self.input['patch_x'] = 20
+        #self.input['patch_y'] = 20
+        #self.input['window_x'] = 20
+        #self.input['window_y'] = 20
+        #self.input['step'] = 20
         self._python_only_job = True
         self._image = None
         self._vec = []
@@ -43,13 +48,24 @@ class TEMMETAJob(TemplateJob):
         if len(self._vec) == 2:
             ax.arrow(x1, y1, x2-x1, y2-y1, color = (0., 1., 0.), head_width=5)
     
+    def perform_segmentation(self,image):
+        seg = segmentationSTEM(n_patterns=2,
+                       window_x=20,window_y=20,
+                       patch_x=20,patch_y=20,
+                       step=5,
+                       upsampling=True)
+        labels = seg.perform_clustering(image)
+        return labels
+
     def run_static(self):
         if len(self._vec) == 2:
             [[x1, y1], [x2, y2]] = self._vec
             av = self._image.average()
             self._profile = av.intensity_profile(x1, y1, x2, y2)
+            self._segmentation_labels = self.perform_segmentation(av.data) 
             with self.project_hdf5.open("output/generic") as h5out: 
                  h5out["profile"] = self._profile.data
+                 h5out["segmentation_labels"] = self._segmentation_labels
         self.status.finished = True
             
     def plot_profile(self):
