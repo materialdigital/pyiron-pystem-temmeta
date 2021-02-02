@@ -12,9 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: pyiron/experimental:latest
     steps:
-    - uses: actions/checkout@v2
-    - name: print content
-      run: ls -l ${GITHUB_WORKSPACE} 
+    - uses: ./.github/actions/action_docker
+    
