@@ -1,7 +1,7 @@
 channels:
 - conda-forge
 dependencies:
-- pyiron_base=0.1.44
+- pyiron_base=0.1.46
 - temmeta=0.0.6
 - pystem=0.0.25
 - papermill
