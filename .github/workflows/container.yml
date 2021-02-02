@@ -12,11 +12,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    container:
-#      image: pyiron/experimental:latest
     steps:
     - uses: actions/checkout@v2
-    - name: Test notebooks on PMD images	    
-      uses: docker://pyiron/experimental:latest
-      with:
-        entrypoint: /bin/bash -c 'source /opt/conda/bin/activate; i=0; for f in $(ls ~/*.ipynb); do jupyter nbconvert --ExecutePreprocessor.timeout=9999999 --to notebook --execute $f || i=$((i+1)); done; if [ $i -gt 0 ]; then exit 1; fi;'
+    - name: test inside the docker image
+      runs:
+        using: 'docker'
+        image: 'Dockerfile'
+    
