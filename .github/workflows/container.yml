@@ -16,5 +16,5 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
     - name: Use local action
-      uses: ./.github/actions/action
+      uses: ./.github/actions/
     
