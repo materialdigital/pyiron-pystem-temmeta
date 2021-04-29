@@ -1,0 +1,13 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/.dependabot"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: pyiron-base
+    versions:
+    - 0.2.4
+    - 0.2.6
+    - 0.2.7
